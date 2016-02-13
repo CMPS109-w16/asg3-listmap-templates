@@ -54,6 +54,7 @@ const string datestring ();
 
 list<string> split (const string& line, const string& delimiter);
 
+
 //
 // complain -
 //    Used for starting error messages.  Sets the exit status to

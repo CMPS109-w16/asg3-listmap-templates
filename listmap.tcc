@@ -32,6 +32,7 @@ listmap<Key,Value,Less>::~listmap() {
    TRACE ('l', (void*) this);
 }
 
+
 //
 // iterator listmap::insert (const value_type&)
 //
@@ -62,6 +63,7 @@ listmap<Key,Value,Less>::erase (iterator position) {
    return iterator();
 }
 
+
 //
 /////////////////////////////////////////////////////////////////
 // Operations on listmap::iterator.
@@ -110,6 +112,7 @@ listmap<Key,Value,Less>::iterator::operator--() {
    return *this;
 }
 
+
 //
 // bool listmap::iterator::operator== (const iterator&)
 //

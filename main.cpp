@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-#include<fstream>
+#include <fstream>
 using namespace std;
 
 #include "listmap.h"
@@ -32,32 +32,57 @@ void scan_options (int argc, char** argv) {
    }
 }
 
+string trim(string line){
+   size_t start = 0;
+   size_t end = 0;
+
+   start = line.find_first_not_of(" ");
+   end = line.find_last_not_of(" ");
+   line = line.substr(start, end - start + 1);
+   return line;
+}
+
+void process_file(char* file_name){
+   ifstream myfile(file_name); string line;
+   if(myfile.is_open()){
+      while(getline(myfile, line)) cout << line << endl;
+      myfile.close();
+   }
+}
+
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
-   ifstream myfile; string line;
    str_str_map test;
-   for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
-      str_str_pair pair (*argp, to_string<int> (argp - argv));
-      cout << "Before insert: " << pair << endl;
-      myfile.open(*argp);
-      if(myfile.is_open()){
-         while(getline (myfile, line)){
-            cout << line << '\n';
+   if(argc == optind){
+      for(;;){
+         try{
+            string line; string first; string second;
+            size_t equal_sign_pos = 0;
+            getline(cin, line);
+            if(cin.eof()) break;
+            if(line.find_first_of("=") == string::npos);
+            else{
+               equal_sign_pos = line.find_first_of("=");
+               first = line.substr(0, equal_sign_pos);
+               second = line.substr(equal_sign_pos + 1);
+
+               first = trim(first);
+               second = trim(second);
+               str_str_pair pair(first, second);
+               cout << pair << endl;
+               test.insert(pair);
+            }
+         }catch(processing_error& error){
+            complain() << error.what() << endl;
          }
-         myfile.close();
       }
-      test.insert (pair);
    }
-
-   for (str_str_map::iterator itor = test.begin();
-        itor != test.end(); ++itor) {
-      cout << "During iteration: " << *itor << endl;
+   else{
+      for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
+         process_file(*argp);
+      }
    }
-
-   str_str_map::iterator itor = test.begin();
-   test.erase (itor);
-
    cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;
 }

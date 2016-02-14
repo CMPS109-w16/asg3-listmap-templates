@@ -38,6 +38,11 @@ class sys_info {
       static int exit_status;
 };
 
+class processing_error : public runtime_error{
+   public:
+      explicit processing_error (const string& what);
+};
+
 //
 // datestring -
 //    Return the current date, as printed by date(1).

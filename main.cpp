@@ -62,28 +62,28 @@ int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
    string line;
-   try{
-      if(argc == optind){
-         for(;;) {
-            getline(cin, line);
-            if(cin.eof()) break;
-            if(line.find_first_of("=") == string::npos);
-            else format_line(line);
-         }
+   if(argc == optind){
+      for(;;) {
+         getline(cin, line);
+         if(cin.eof()) break;
+         if(line.find_first_of("=") == string::npos);
+         else format_line(line);
       }
-      else {
-         for(char** argp = &argv[optind]; argp != &argv[argc]; ++argp){
+   }
+   else {
+      for(char** argp = &argv[optind]; argp != &argv[argc]; ++argp){
+          try{
             ifstream myfile(*argp);
             if(!myfile)
                throw processing_error("No such file or directory");
             while(getline(myfile, line)) format_line(line);
             myfile.close();
+         }catch(processing_error& error){
+            complain() << error.what() << endl;
          }
       }
-   }catch(processing_error& error){
-      complain() << error.what() << endl;
    }
-   cout << "EXIT_SUCCESS" << endl;
-   return EXIT_SUCCESS;
+cout << "EXIT_SUCCESS" << endl;
+return EXIT_SUCCESS;
 }
 

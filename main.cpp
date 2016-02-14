@@ -42,46 +42,50 @@ string trim(string line){
    return line;
 }
 
-void process_file(char* file_name){
-   ifstream myfile(file_name); string line;
-   if(myfile.is_open()){
-      while(getline(myfile, line)) cout << line << endl;
-      myfile.close();
-   }
+void format_line(string line){
+   str_str_map test;
+   string first; string second;
+   size_t equal_sign_pos = 0;
+
+   equal_sign_pos = line.find_first_of("=");
+   first = line.substr(0, equal_sign_pos);
+   second = line.substr(equal_sign_pos + 1);
+
+   first = trim(first);
+   second = trim(second);
+   str_str_pair pair(first, second);
+   cout << pair << endl;
+   test.insert(pair);
 }
 
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
-   str_str_map test;
-   if(argc == optind){
-      for(;;){
-         try{
-            string line; string first; string second;
-            size_t equal_sign_pos = 0;
+   string line;
+   try{
+      if(argc == optind) {
+         for(;;) {
+
             getline(cin, line);
             if(cin.eof()) break;
             if(line.find_first_of("=") == string::npos);
-            else{
-               equal_sign_pos = line.find_first_of("=");
-               first = line.substr(0, equal_sign_pos);
-               second = line.substr(equal_sign_pos + 1);
-
-               first = trim(first);
-               second = trim(second);
-               str_str_pair pair(first, second);
-               cout << pair << endl;
-               test.insert(pair);
+            else {
+               format_line(line);
             }
-         }catch(processing_error& error){
-            complain() << error.what() << endl;
          }
       }
-   }
-   else{
-      for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
-         process_file(*argp);
+      else {
+         for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
+            ifstream myfile;
+            myfile.open(*argp);
+            if(!myfile)
+               throw processing_error("No such file or directory");
+            while(getline(myfile, line)) format_line(line);
+            myfile.close();
+         }
       }
+   }catch(processing_error& error){
+      complain() << error.what() << endl;
    }
    cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;

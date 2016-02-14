@@ -69,15 +69,12 @@ int main (int argc, char** argv) {
             getline(cin, line);
             if(cin.eof()) break;
             if(line.find_first_of("=") == string::npos);
-            else {
-               format_line(line);
-            }
+            else format_line(line);
          }
       }
       else {
          for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
-            ifstream myfile;
-            myfile.open(*argp);
+            ifstream myfile(*argp);
             if(!myfile)
                throw processing_error("No such file or directory");
             while(getline(myfile, line)) format_line(line);

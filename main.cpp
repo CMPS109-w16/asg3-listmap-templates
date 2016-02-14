@@ -63,9 +63,8 @@ int main (int argc, char** argv) {
    scan_options (argc, argv);
    string line;
    try{
-      if(argc == optind) {
+      if(argc == optind){
          for(;;) {
-
             getline(cin, line);
             if(cin.eof()) break;
             if(line.find_first_of("=") == string::npos);
@@ -73,7 +72,7 @@ int main (int argc, char** argv) {
          }
       }
       else {
-         for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
+         for(char** argp = &argv[optind]; argp != &argv[argc]; ++argp){
             ifstream myfile(*argp);
             if(!myfile)
                throw processing_error("No such file or directory");

@@ -46,6 +46,7 @@ void format_line(string line){
    str_str_map test;
    string first; string second;
    size_t equal_sign_pos = 0;
+   str_str_map::iterator curr;
 
    equal_sign_pos = line.find_first_of("=");
    first = line.substr(0, equal_sign_pos);
@@ -55,7 +56,8 @@ void format_line(string line){
    second = trim(second);
    str_str_pair pair(first, second);
    cout << pair << endl;
-   test.insert(pair);
+   curr = test.insert(pair);
+   cout << curr->first << curr->second << endl; // test
 }
 
 int main (int argc, char** argv) {

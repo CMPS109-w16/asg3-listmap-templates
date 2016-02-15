@@ -6,7 +6,6 @@
 #include <string>
 #include <unistd.h>
 #include <fstream>
-
 using namespace std;
 
 #include "listmap.h"
@@ -16,79 +15,122 @@ using namespace std;
 using str_str_map = listmap<string,string>;
 using str_str_pair = str_str_map::value_type;
 
-void scan_options(int argc, char** argv) {
+void scan_options (int argc, char** argv) {
    opterr = 0;
    for (;;) {
-      int option = getopt(argc, argv, "@:");
+      int option = getopt (argc, argv, "@:");
       if (option == EOF) break;
       switch (option) {
-      case '@':
-         traceflags::setflags(optarg);
-         break;
-      default:
-         complain() << "-" << (char) optopt << ": invalid option"
-                  << endl;
-         break;
+         case '@':
+            traceflags::setflags (optarg);
+            break;
+         default:
+            complain() << "-" << (char) optopt << ": invalid option"
+                       << endl;
+            break;
       }
    }
 }
 
-// Does exactly what it says on the tin.
-void print_line(const string file_name, int line_num, string line_str) {
-   cout << file_name << ": " << line_num << ": " << line_str << endl;
-}
-
-// Finds the two positions with dangling white space, and shaves off
-// the white space to return the line.
 string trim(string line) {
    size_t start = 0;
    size_t end = 0;
 
    start = line.find_first_not_of(" ");
    end = line.find_last_not_of(" ");
+   if (start == end && start != 0 && end != 0) {
+      if (line == "#") {
+         return "#";
+      } else if (line == "=") {
+         return "=";
+      } else if (line == "") {
+         return "";
+      }
+   }
    line = line.substr(start, end - start + 1);
    return line;
 }
 
-// Takes the file or input, and parses it as usable code.
-void process_file(string file_name, istream &input_file) {
-   str_str_map test { };
+void format_line(string line) {
+   str_str_map test;
+   string first;
+   string second;
+   size_t equal_sign_pos { };
 
-   for (int line_num = 1;; ++line_num) {
-      string line = "";
-      getline(input_file, line);
+   if (line == "") {    // case: <whitespace>
+      return;
+   } else if (line.find_first_of("#") == 0) {   // case: #
+      return;
+   }
 
-      // Passing in blank space should return empty lines.
-      if (line.size() == 0) {
-         print_line(file_name, line_num, "");
-         continue;
-      }
+   // If there's no = sign at all
+   if (line.find_first_of("=") == string::npos) {   // case: key
+      cout << "Search for Keys and stuff";
 
-      // Separate the line into two strings around the = sign.
-      string first = "";
-      string second = "";
-      size_t equal_sign_pos = 0;
+      auto itor = test.find(line);
+      if (itor != test.end())
+         cout << itor->first << " = " << itor->second << endl;
+      else
+         cout << line << ": key not found" << endl;
+
+   } else {
+      // If there is an = sign somewhere
       equal_sign_pos = line.find_first_of("=");
-      first = line.substr(0, equal_sign_pos);
-      second = line.substr(equal_sign_pos + 1);
 
-      // Trim excess whitespace from first and second arguments.
-      first = trim(first);
-      second = trim(second);
+      // If the equals is the first character.
+      if (equal_sign_pos == 0) {
+         first = "";
+         second = line.substr(equal_sign_pos + 1);
+         second = trim(second);
+         if (second == "") {      // case: =
+            cout << "Show Everything and stuff...";
+         } else {       // case: = value
+            cout << "Find Keys from Values and stuff...";
+         }
+      } else {    // Equals is not the first character
+         first = line.substr(0, equal_sign_pos);
+         second = line.substr(equal_sign_pos + 1);
+         first = trim(first);
+         second = trim(second);
 
-      print_line(file_name, line_num, first + " = " + second);
-
+         if (second == "") {    // case: key =
+            cout << "Show Value for Key and stuff...";
+         } else {    // case: key = value
+            str_str_pair pair(first, second);
+            test.insert(pair);
+            cout << pair << " was inserted and stuff!" << endl;
+         }
+      }
+      str_str_pair pair(first, second);
+      cout << pair << endl;
    }
 }
 
-int main(int argc, char** argv) {
-   sys_info::set_execname(argv[0]);
-   scan_options(argc, argv);
-   int EXIT_STATUS = 0;
-
-   //If no arguments stated, run the main program using cin
-   if (optind == argc) {
-      process_file("-", cin);
+int main (int argc, char** argv) {
+   sys_info::set_execname (argv[0]);
+   scan_options (argc, argv);
+   string line;
+   if(argc == optind){
+      for(;;) {
+         getline(cin, line);
+         if(cin.eof()) break;
+         format_line(line);
+      }
    }
-   return EXIT_STATUS;
+   else {
+      for(char** argp = &argv[optind]; argp != &argv[argc]; ++argp){
+          try{
+            ifstream myfile(*argp);
+            if(!myfile)
+               throw processing_error("No such file or directory");
+            while(getline(myfile, line)) format_line(line);
+            myfile.close();
+         }catch(processing_error& error){
+            complain() << error.what() << endl;
+         }
+      }
+   }
+cout << "EXIT_SUCCESS" << endl;
+return EXIT_SUCCESS;
 }
+

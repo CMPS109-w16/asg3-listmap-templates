@@ -51,7 +51,10 @@ const string datestring () {
    return timebuf;
 }
 
-
+processing_error::processing_error(const string& what):
+            runtime_error (what) {
+}
+
 list<string> split (const string& line, const string& delimiters) {
    list<string> words;
    size_t end = 0;

@@ -106,7 +106,7 @@ void format_line(string title, int line_num, string line) {
          } else {    // case: key = value
             str_str_pair pair(first, second);
             test.insert(pair);
-            print_line(title, line_num, first + " = " + second);
+            print_line(title, line_num, first + " + " + second);
          }
       }
       // Debugging prints. Remove later.
@@ -126,6 +126,16 @@ int main(int argc, char** argv) {
       for (;;) {
          getline(cin, line);
          if (cin.eof()) break;
+         // Doesn't do anything for empty line commands.
+         if (line == "") {    // case: <whitespace>
+            continue;
+            // Doesn't do anything for comments either.
+            // Checks for whitespace before # as first non-whitespace
+            // character to identify the line as a comment.
+         } else if (line.find_first_of("#")
+                  <= line.find_first_not_of(" ")) {   // case: #
+            continue;
+         }
          format_line("-", line_num, line);
          ++line_num;
       }
@@ -141,6 +151,16 @@ int main(int argc, char** argv) {
             if (!myfile)
                throw processing_error("No such file or directory");
             while (getline(myfile, line)) {
+               // Doesn't do anything for empty line commands.
+               if (line == "") {    // case: <whitespace>
+                  continue;
+                  // Doesn't do anything for comments either.
+                  // Checks for whitespace before # as first non-whitespace
+                  // character to identify the line as a comment.
+               } else if (line.find_first_of("#")
+                        <= line.find_first_not_of(" ")) {   // case: #
+                  continue;
+               }
                format_line(*argp, line_num, line);
                ++line_num;
             }

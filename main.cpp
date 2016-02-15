@@ -106,7 +106,7 @@ void format_line(string title, int line_num, string line) {
          } else {    // case: key = value
             str_str_pair pair(first, second);
             test.insert(pair);
-            print_line(title, line_num, first + " + " + second);
+            print_line(title, line_num, first + " = " + second);
          }
       }
       // Debugging prints. Remove later.

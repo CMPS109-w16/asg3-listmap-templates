@@ -104,7 +104,11 @@ void format_line(string title, int line_num, string line,
          //case: key =
          if (second == "") {
             curr = test.find(first);
-            curr = test.erase(curr);
+            if(curr == test.end()) print_line(title, line_num, line);
+            else {
+               curr = test.erase(curr);
+               print_line(title, line_num, line);
+            }
            //case: key = value
          } else {
             str_str_pair pair(first, second);
@@ -157,7 +161,6 @@ int main (int argc, char** argv) {
          }
       }
    }
-cout << "EXIT_SUCCESS" << endl;
-return EXIT_SUCCESS;
+return sys_info::get_exit_status();
 }
 

@@ -86,8 +86,14 @@ void format_line(string title, int line_num, string line,
             }
            //case: = value
          } else {
-            print_line(title, line_num,
-                     "Find Keys from Values and stuff...");
+            print_line(title, line_num, line);
+            curr = test.begin();
+            while (curr != test.end()) {
+               if (second == curr->second) {
+                  cout << curr->first << " = " << curr->second << endl;
+               }
+               ++curr;
+            }
          }
         //cases key =, key = value
       } else {
@@ -97,13 +103,14 @@ void format_line(string title, int line_num, string line,
          second = trim(second);
          //case: key =
          if (second == "") {
-            print_line(title, line_num,
-                     "Show Value for Key and stuff...");
+            curr = test.find(first);
+            curr = test.erase(curr);
            //case: key = value
          } else {
             str_str_pair pair(first, second);
             curr = test.insert(pair);
-            cout << curr->first << curr->second << endl;
+            print_line(title, line_num, line);
+            cout << curr->first + " = " + curr->second << endl;
          }
       }
    }

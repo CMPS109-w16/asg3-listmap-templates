@@ -53,7 +53,7 @@ class listmap<Key,Value,Less>::iterator {
       value_type* operator->();
       iterator& operator++(); //++itor
       iterator& operator--(); //--itor
-      void erase();
+      void erase() {delete where;}
       bool operator== (const iterator&) const;
       bool operator!= (const iterator&) const;
 };

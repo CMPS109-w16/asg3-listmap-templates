@@ -1,5 +1,6 @@
 // $Id: util.h,v 1.4 2015-02-11 13:03:38-08 - - $
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 //
 // util -
 //    A utility class to provide various services not conveniently

@@ -1,4 +1,6 @@
 // $Id: main.cpp,v 1.8 2015-04-28 19:23:13-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #include <cstdlib>
 #include <exception>

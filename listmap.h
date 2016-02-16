@@ -1,4 +1,6 @@
 // $Id: listmap.h,v 1.11 2015-04-28 19:22:02-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #ifndef __LISTMAP_H__
 #define __LISTMAP_H__

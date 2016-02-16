@@ -1,4 +1,6 @@
 // $Id: xpair.h,v 1.4 2014-06-27 17:39:08-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #ifndef __XPAIR_H__
 #define __XPAIR_H__

@@ -1,4 +1,6 @@
 // $Id: trace.h,v 1.2 2014-04-24 18:02:55-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #ifndef __TRACE_H__
 #define __TRACE_H__

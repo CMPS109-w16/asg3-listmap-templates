@@ -60,8 +60,10 @@ void format_line(string title, int line_num, string line,
    size_t equal_sign_pos { };
    str_str_map::iterator curr;
 
-   // If there's no = sign at all...
-   //case: key
+   //-------------------------------------------------------//
+   // CASE: key
+   // If no = sign is given, the item must be a key.
+   //-------------------------------------------------------//
    if (line.find_first_of("=") == string::npos) {
       curr = test.find(line);
       if (curr == test.end())
@@ -70,18 +72,25 @@ void format_line(string title, int line_num, string line,
          print_line(title, line_num, line);
          cout << curr->first << " = " << curr->second << endl;
       }
-      //cases =, =value
    } else {
-      // If there is an = sign somewhere, first find where it is.
+      // If there is an = sign in the command line, this section
+      // will parse it.
+      // The first section will parse commands where = is at the start.
+      // The second section will parse commands where = isn't at start.
       equal_sign_pos = line.find_first_of("=");
 
-      // If the equals is the first character...
+      ///////////////////////////////////////////////////////////
+      // The first character in line is the = sign.            //
+      // CASES: =, = value                                     //
+      ///////////////////////////////////////////////////////////
       if (equal_sign_pos == 0) {
          first = "";
          second = line.substr(equal_sign_pos + 1);
          second = trim(second);
-         // If = is alone without values, show all keys and values.
-         //case: = value
+         //-------------------------------------------------------//
+         // CASES: =                                              //
+         // If only = is given, print keys and values.            //
+         //-------------------------------------------------------//
          if (second == "") {      // case: =
             print_line(title, line_num, "=");
             curr = test.begin();
@@ -89,27 +98,42 @@ void format_line(string title, int line_num, string line,
                cout << curr->first << " = " << curr->second << endl;
                ++curr;
             }
-            // If = is followed by a value, show the keys with that value.
-         } else {       // case: = value
-            print_line(title, line_num,
-                     "Find Keys from Values and stuff...");
+            //-------------------------------------------------------//
+            // CASES: = VALUE                                        //
+            // Output keys whose values match the given value.       //
+            //-------------------------------------------------------//
+         } else {
+            print_line(title, line_num, line);
+            curr = test.begin();
+            while (curr != test.end()) {
+               if (second == curr->second) {
+                  cout << curr->first << " = " << curr->second << endl;
+               }
+               ++curr;
+            }
          }
-         // If equals is not the first character...
-         //cases key =, key = value
+         ///////////////////////////////////////////////////////////
+         // There is an = sign, but it is not the first character //
+         // CASES: key =, key - value                             //
+         ///////////////////////////////////////////////////////////
       } else {
          first = line.substr(0, equal_sign_pos);
          second = line.substr(equal_sign_pos + 1);
          first = trim(first);
          second = trim(second);
-         // If there is a key followed by =, show the value of that key.
-         // case: key =
+         //-------------------------------------------------------//
+         // CASES: KEY =                                          //
+         // Deletes the given Key and its value.                  //
+         //-------------------------------------------------------//
          if (second == "") {
             print_line(title, line_num,
-                     "Show Value for Key and stuff...");
-            // Final case is a key, =, and a value in that order.
-            // Insert the key and value into the map.
-            // case: key = value
+                     "Delete Key and Value and stuff...");
          } else {
+            //-------------------------------------------------------//
+            // CASES: KEY = VALUE                                    //
+            // Insert the Key and Value into the map.                //
+            // If the key already exists, change its value.          //
+            //-------------------------------------------------------//
             str_str_pair pair(first, second);
             curr = test.insert(pair);
             print_line(title, line_num, line);
@@ -160,8 +184,9 @@ int main(int argc, char** argv) {
                if (line == "") {    // case: <whitespace>
                   continue;
                   // Doesn't do anything for comments either.
-                  // Checks for whitespace before # as first non-whitespace
-                  // character to identify the line as a comment.
+                  // Checks for whitespace before # as first
+                  //non-whitespace character to identify the line
+                  // as a comment.
                } else if (line.find_first_of("#")
                         <= line.find_first_not_of(" ")) {   // case: #
                   continue;

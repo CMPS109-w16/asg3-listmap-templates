@@ -1,4 +1,6 @@
 // $Id: listmap.tcc,v 1.7 2015-04-28 19:22:02-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #include "listmap.h"
 #include "trace.h"
@@ -94,8 +96,12 @@ listmap<Key,Value,Less>::find (const key_type& that) {
 template <typename Key, typename Value, class Less>
 typename listmap<Key,Value,Less>::iterator
 listmap<Key,Value,Less>::erase (iterator position) {
+   listmap<Key,Value,Less>::iterator temp = position.where->next;
+   position.where->next->prev = position.where->prev;
+   position.where->prev->next = position.where->next;
+   position.erase();
    TRACE ('l', &*position);
-   return iterator();
+   return temp;
 }
 
 //

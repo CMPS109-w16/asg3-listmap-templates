@@ -1,4 +1,6 @@
 // $Id: trace.cpp,v 1.3 2014-05-29 19:20:19-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #include <climits>
 #include <iostream>

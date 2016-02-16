@@ -1,4 +1,6 @@
 // $Id: xless.h,v 1.3 2014-04-24 18:02:55-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #ifndef __XLESS_H__
 #define __XLESS_H__

@@ -1,4 +1,6 @@
 // $Id: util.tcc,v 1.3 2014-06-27 17:49:07-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #include <sstream>
 #include <typeinfo>

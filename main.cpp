@@ -39,7 +39,6 @@ string trim(string line) {
 
    start = line.find_first_not_of(" ");
    end = line.find_last_not_of(" ");
-   //Some single-character lines need to be handled specially.
 
    if (line == "") return "";    // Prevents out of range error.
    line = line.substr(start, end - start + 1);
@@ -60,9 +59,12 @@ void format_line(string title, int line_num, string line,
    size_t equal_sign_pos { };
    str_str_map::iterator curr;
 
+   ///////////////////////////////////////////////////////////
+   // There is no = sign in the command input               //
+   ///////////////////////////////////////////////////////////
    //-------------------------------------------------------//
-   // CASE: key
-   // If no = sign is given, the item must be a key.
+   // CASE: key                                             //
+   // Display the given key and its associated value.       //
    //-------------------------------------------------------//
    if (line.find_first_of("=") == string::npos) {
       curr = test.find(line);
@@ -88,7 +90,7 @@ void format_line(string title, int line_num, string line,
          second = line.substr(equal_sign_pos + 1);
          second = trim(second);
          //-------------------------------------------------------//
-         // CASES: =                                              //
+         // CASE: =                                              //
          // If only = is given, print keys and values.            //
          //-------------------------------------------------------//
          if (second == "") {      // case: =
@@ -99,7 +101,7 @@ void format_line(string title, int line_num, string line,
                ++curr;
             }
             //-------------------------------------------------------//
-            // CASES: = VALUE                                        //
+            // CASE: = VALUE                                        //
             // Output keys whose values match the given value.       //
             //-------------------------------------------------------//
          } else {
@@ -114,7 +116,7 @@ void format_line(string title, int line_num, string line,
          }
          ///////////////////////////////////////////////////////////
          // There is an = sign, but it is not the first character //
-         // CASES: key =, key - value                             //
+         // CASES: key =, key = value                             //
          ///////////////////////////////////////////////////////////
       } else {
          first = line.substr(0, equal_sign_pos);
@@ -122,7 +124,7 @@ void format_line(string title, int line_num, string line,
          first = trim(first);
          second = trim(second);
          //-------------------------------------------------------//
-         // CASES: KEY =                                          //
+         // CASE: KEY =                                          //
          // Deletes the given Key and its value.                  //
          //-------------------------------------------------------//
          if (second == "") {
@@ -130,7 +132,7 @@ void format_line(string title, int line_num, string line,
                      "Delete Key and Value and stuff...");
          } else {
             //-------------------------------------------------------//
-            // CASES: KEY = VALUE                                    //
+            // CASE: KEY = VALUE                                    //
             // Insert the Key and Value into the map.                //
             // If the key already exists, change its value.          //
             //-------------------------------------------------------//

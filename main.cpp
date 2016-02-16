@@ -32,44 +32,98 @@ void scan_options (int argc, char** argv) {
    }
 }
 
-string trim(string line){
+//Removes trailing whitespace from the beginning and end of a string.
+string trim(string line) {
    size_t start = 0;
    size_t end = 0;
 
    start = line.find_first_not_of(" ");
    end = line.find_last_not_of(" ");
+   //Some single-character lines need to be handled specially.
+   if (start == end){
+      if (line == "") return "";
+   }
    line = line.substr(start, end - start + 1);
    return line;
 }
 
-void format_line(string line){
-   str_str_map test;
+// Prints out a line of output, consisting of the file name, the line
+// number, and the string of output.
+void print_line(const string file_name, int& line_num,
+         string line_str) {
+   cout << file_name << ": " << line_num << ": " << line_str << endl;
+}
+
+void format_line(string title, int line_num, string line,
+         str_str_map &test) {
    string first; string second;
-   size_t equal_sign_pos = 0;
+   size_t equal_sign_pos;
    str_str_map::iterator curr;
 
-   equal_sign_pos = line.find_first_of("=");
-   first = line.substr(0, equal_sign_pos);
-   second = line.substr(equal_sign_pos + 1);
+   //case: key
+   if (line.find_first_of("=") == string::npos) {
+      curr = test.find(line);
+      if (curr == test.end())
+         cout << line << ": key not found" << endl;
+      else {
+         print_line(title, line_num, line);
+         cout << curr->first << " = " << curr->second << endl;
+      }
+     //cases =, =value
+   } else {
+      //Find where "=" is.
+      equal_sign_pos = line.find_first_of("=");
 
-   first = trim(first);
-   second = trim(second);
-   str_str_pair pair(first, second);
-   cout << pair << endl;
-   curr = test.insert(pair);
-   cout << curr->first << curr->second << endl; // test
+      if (equal_sign_pos == 0) {
+         first = "";
+         second = line.substr(equal_sign_pos + 1);
+         second = trim(second);
+         //case: =
+         if (second == "") {
+            print_line(title, line_num, "Show Everything and stuff...");
+           //case: = value
+         } else {
+            print_line(title, line_num,
+                     "Find Keys from Values and stuff...");
+         }
+        //cases key =, key = value
+      } else {
+         first = line.substr(0, equal_sign_pos);
+         second = line.substr(equal_sign_pos + 1);
+         first = trim(first);
+         second = trim(second);
+         //case: key =
+         if (second == "") {
+            print_line(title, line_num,
+                     "Show Value for Key and stuff...");
+           //case: key = value
+         } else {
+            str_str_pair pair(first, second);
+            curr = test.insert(pair);
+            cout << curr->first << curr->second << endl;
+         }
+      }
+   }
 }
 
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
-   string line;
+   string line; int line_num = 1;
+   str_str_map test;
    if(argc == optind){
       for(;;) {
          getline(cin, line);
          if(cin.eof()) break;
-         if(line.find_first_of("=") == string::npos);
-         else format_line(line);
+         //case: whitespace
+         if(line == "") continue;
+         //case: #
+         else if(line.find_first_of("#")
+                  <= line.find_first_not_of(" ")){
+            continue;
+         }
+         format_line("-", line_num, line, test);
+         ++line_num;
       }
    }
    else {
@@ -78,7 +132,15 @@ int main (int argc, char** argv) {
             ifstream myfile(*argp);
             if(!myfile)
                throw processing_error("No such file or directory");
-            while(getline(myfile, line)) format_line(line);
+            while(getline(myfile, line)) {
+               if(line == "") continue;
+               else if (line.find_first_of("#")
+                        <= line.find_first_not_of(" ")) {
+                  continue;
+               }
+               format_line(*argp, line_num, line, test);
+               ++line_num;
+            }
             myfile.close();
          }catch(processing_error& error){
             complain() << error.what() << endl;

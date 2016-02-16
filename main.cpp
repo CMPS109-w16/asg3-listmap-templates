@@ -17,19 +17,19 @@ using namespace std;
 using str_str_map = listmap<string,string>;
 using str_str_pair = str_str_map::value_type;
 
-void scan_options (int argc, char** argv) {
+void scan_options(int argc, char** argv) {
    opterr = 0;
    for (;;) {
-      int option = getopt (argc, argv, "@:");
+      int option = getopt(argc, argv, "@:");
       if (option == EOF) break;
       switch (option) {
-         case '@':
-            traceflags::setflags (optarg);
-            break;
-         default:
-            complain() << "-" << (char) optopt << ": invalid option"
-                       << endl;
-            break;
+      case '@':
+         traceflags::setflags(optarg);
+         break;
+      default:
+         complain() << "-" << (char) optopt << ": invalid option"
+                  << endl;
+         break;
       }
    }
 }
@@ -56,20 +56,22 @@ void print_line(const string file_name, int& line_num,
 
 void format_line(string title, int line_num, string line,
          str_str_map &test) {
-   string first; string second;
+   string first;
+   string second;
    size_t equal_sign_pos;
    str_str_map::iterator curr;
 
    //case: key
    if (line.find_first_of("=") == string::npos) {
       curr = test.find(line);
-      if (curr == test.end())
+      if (curr == test.end()) {
+         print_line(title, line_num, line);
          cout << line << ": key not found" << endl;
-      else {
+      } else {
          print_line(title, line_num, line);
          cout << curr->first << " = " << curr->second << endl;
       }
-     //All cases dealing with "="
+      //All cases dealing with "="
    } else {
       //Find where "=" is.
       equal_sign_pos = line.find_first_of("=");
@@ -86,7 +88,7 @@ void format_line(string title, int line_num, string line,
                cout << curr->first << " = " << curr->second << endl;
                ++curr;
             }
-           //case: = value
+            //case: = value
          } else {
             print_line(title, line_num, line);
             curr = test.begin();
@@ -97,7 +99,7 @@ void format_line(string title, int line_num, string line,
                ++curr;
             }
          }
-        //cases key =, key = value
+         //cases key =, key = value
       } else {
          first = line.substr(0, equal_sign_pos);
          second = line.substr(equal_sign_pos + 1);
@@ -107,7 +109,7 @@ void format_line(string title, int line_num, string line,
          if (second == "") {
             curr = test.find(first);
             curr = test.erase(curr);
-           //case: key = value
+            //case: key = value
          } else {
             str_str_pair pair(first, second);
             curr = test.insert(pair);
@@ -118,48 +120,60 @@ void format_line(string title, int line_num, string line,
    }
 }
 
-int main (int argc, char** argv) {
-   sys_info::set_execname (argv[0]);
-   scan_options (argc, argv);
-   string line; int line_num = 1;
+int main(int argc, char** argv) {
+   sys_info::set_execname(argv[0]);
+   scan_options(argc, argv);
+   string line;
+   int line_num = 1;
    str_str_map test;
-   if(argc == optind){
-      for(;;) {
+   if (argc == optind) {
+      for (;;) {
          getline(cin, line);
-         if(cin.eof()) break;
+         if (cin.eof()) break;
          //case: whitespace
-         if(line == "") continue;
+         if (line == "") {
+            print_line("-", line_num, line);
+            ++line_num;
+            continue;
+         }
          //case: #
-         else if(line.find_first_of("#")
-                  <= line.find_first_not_of(" ")){
+         else if (line.find_first_of("#")
+                  <= line.find_first_not_of(" ")) {
+            print_line("-", line_num, line);
+            ++line_num;
             continue;
          }
          format_line("-", line_num, line, test);
          ++line_num;
       }
-   }
-   else {
-      for(char** argp = &argv[optind]; argp != &argv[argc]; ++argp){
-          try{
+   } else {
+      for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
+         try {
             ifstream myfile(*argp);
-            if(!myfile)
+            if (!myfile)
                throw processing_error("No such file or directory");
-            while(getline(myfile, line)) {
-               if(line == "") continue;
-               else if (line.find_first_of("#")
+            while (getline(myfile, line)) {
+               if (line == "") {
+                  print_line("-", line_num, line);
+                  ++line_num;
+                  continue;
+               } else if (line.find_first_of("#")
                         <= line.find_first_not_of(" ")) {
+                  print_line(*argp, line_num, line);
+                  ++line_num;
                   continue;
                }
                format_line(*argp, line_num, line, test);
                ++line_num;
             }
             myfile.close();
-         }catch(processing_error& error){
+         } catch (processing_error& error) {
             complain() << error.what() << endl;
          }
       }
    }
-cout << "EXIT_SUCCESS" << endl;
-return EXIT_SUCCESS;
+   cout << "EXIT_SUCCESS" << endl;
+//   cout << sys_info::get_exit_status();
+   return sys_info::get_exit_status();
 }
 

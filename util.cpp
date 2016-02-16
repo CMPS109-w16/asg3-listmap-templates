@@ -44,6 +44,12 @@ int sys_info::get_exit_status () {
    return exit_status;
 }
 
+int exit_status_message() {
+   int exit_status = sys_info::get_exit_status();
+   cout << sys_info::get_execname () << ": exit(" << exit_status << ")" << endl;
+   return exit_status;
+}
+
 const string datestring () {
    time_t clock = time (nullptr);
    struct tm *tm_ptr = localtime (&clock);

@@ -112,8 +112,8 @@ void format_line(string title, int line_num, string line,
          } else {
             str_str_pair pair(first, second);
             curr = test.insert(pair);
-            print_line(title, line_num,
-                     curr->first + " = " + curr->second);
+            print_line(title, line_num, line);
+            cout << curr->first + " = " + curr->second << endl;
          }
       }
    }

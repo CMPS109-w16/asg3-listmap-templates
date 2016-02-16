@@ -62,7 +62,7 @@ void format_line(string title, int line_num, string line,
    if (line.find_first_of("=") == string::npos) {
       curr = test.find(line);
       if (curr == test.end())
-         cout << line << ": key not found" << endl;
+         cerr << line << ": key not found" << endl;
       else {
          print_line(title, line_num, line);
          cout << curr->first << " = " << curr->second << endl;

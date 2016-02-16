@@ -39,10 +39,8 @@ string trim(string line) {
 
    start = line.find_first_not_of(" ");
    end = line.find_last_not_of(" ");
-   //Some single-character lines need to be handled specially.
-   if (start == end){
-      if (line == "") return "";
-   }
+   //This case is only for "="
+   if (line == "") return "";
    line = line.substr(start, end - start + 1);
    return line;
 }
@@ -69,7 +67,7 @@ void format_line(string title, int line_num, string line,
          print_line(title, line_num, line);
          cout << curr->first << " = " << curr->second << endl;
       }
-     //cases =, =value
+     //All cases dealing with "="
    } else {
       //Find where "=" is.
       equal_sign_pos = line.find_first_of("=");
@@ -80,7 +78,12 @@ void format_line(string title, int line_num, string line,
          second = trim(second);
          //case: =
          if (second == "") {
-            print_line(title, line_num, "Show Everything and stuff...");
+            print_line(title, line_num, "=");
+            curr = test.begin();
+            while (curr != test.end()) {
+               cout << curr->first << " = " << curr->second << endl;
+               ++curr;
+            }
            //case: = value
          } else {
             print_line(title, line_num,

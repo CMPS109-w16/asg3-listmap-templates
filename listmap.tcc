@@ -56,7 +56,7 @@ listmap<Key,Value,Less>::insert (const value_type& pair) {
       //If the key doesn't exist yet
       else{
          curr = begin();
-         while(curr != end() and less(curr->second, pair.second)){
+         while(curr != end() and less(curr->first, pair.first)){
             ++curr;
          }
          node* temp = new node(nullptr, nullptr, pair);

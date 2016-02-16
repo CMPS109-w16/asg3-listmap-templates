@@ -63,8 +63,10 @@ void format_line(string title, int line_num, string line,
    //case: key
    if (line.find_first_of("=") == string::npos) {
       curr = test.find(line);
-      if (curr == test.end())
+      if (curr == test.end()){
+         print_line(title, line_num, line);
          cerr << line << ": key not found" << endl;
+      }
       else {
          print_line(title, line_num, line);
          cout << curr->first << " = " << curr->second << endl;
@@ -132,10 +134,15 @@ int main (int argc, char** argv) {
          getline(cin, line);
          if(cin.eof()) break;
          //case: whitespace
-         if(line == "") continue;
-         //case: #
-         else if(line.find_first_of("#")
-                  <= line.find_first_not_of(" ")){
+         if (line == "") {
+            print_line("-", line_num, line);
+            ++line_num;
+            continue;
+         }
+         else if (line.find_first_of("#")
+          <= line.find_first_not_of(" ")) {
+            print_line("-", line_num, line);
+            ++line_num;
             continue;
          }
          format_line("-", line_num, line, test);
@@ -149,9 +156,14 @@ int main (int argc, char** argv) {
             if(!myfile)
                throw processing_error("No such file or directory");
             while(getline(myfile, line)) {
-               if(line == "") continue;
-               else if (line.find_first_of("#")
+               if (line == "") {
+                  print_line("-", line_num, line);
+                  ++line_num;
+                  continue;
+               } else if (line.find_first_of("#")
                         <= line.find_first_not_of(" ")) {
+                  print_line(*argp, line_num, line);
+                  ++line_num;
                   continue;
                }
                format_line(*argp, line_num, line, test);

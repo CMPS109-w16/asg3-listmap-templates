@@ -65,7 +65,7 @@ void format_line(string title, int line_num, string line,
       curr = test.find(line);
       if (curr == test.end()){
          print_line(title, line_num, line);
-         cerr << line << ": key not found" << endl;
+         cout << line << ": key not found" << endl;
       }
       else {
          print_line(title, line_num, line);
@@ -157,7 +157,7 @@ int main (int argc, char** argv) {
                throw processing_error("No such file or directory");
             while(getline(myfile, line)) {
                if (line == "") {
-                  print_line("-", line_num, line);
+                  print_line(*argp, line_num, line);
                   ++line_num;
                   continue;
                } else if (line.find_first_of("#")
@@ -169,7 +169,7 @@ int main (int argc, char** argv) {
                format_line(*argp, line_num, line, test);
                ++line_num;
             }
-            myfile.close();
+            myfile.close(); line_num = 1;
          }catch(processing_error& error){
             complain() << error.what() << endl;
          }

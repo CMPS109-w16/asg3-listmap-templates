@@ -83,7 +83,7 @@ void format_line(string title, int line_num, string line,
          // If = is alone without values, show all keys and values.
          //case: = value
          if (second == "") {      // case: =
-            print_line(title, line_num, "=\n");
+            print_line(title, line_num, "=");
             curr = test.begin();
             while (curr != test.end()) {
                cout << curr->first << " = " << curr->second << endl;

@@ -90,10 +90,10 @@ void format_line(string title, int line_num, string line,
          second = line.substr(equal_sign_pos + 1);
          second = trim(second);
          //-------------------------------------------------------//
-         // CASE: =                                              //
+         // CASE: =                                               //
          // If only = is given, print keys and values.            //
          //-------------------------------------------------------//
-         if (second == "") {      // case: =
+         if (second == "") {
             print_line(title, line_num, "=");
             curr = test.begin();
             while (curr != test.end()) {
@@ -101,7 +101,7 @@ void format_line(string title, int line_num, string line,
                ++curr;
             }
             //-------------------------------------------------------//
-            // CASE: = VALUE                                        //
+            // CASE: = VALUE                                         //
             // Output keys whose values match the given value.       //
             //-------------------------------------------------------//
          } else {
@@ -124,7 +124,7 @@ void format_line(string title, int line_num, string line,
          first = trim(first);
          second = trim(second);
          //-------------------------------------------------------//
-         // CASE: KEY =                                          //
+         // CASE: KEY =                                           //
          // Deletes the given Key and its value.                  //
          //-------------------------------------------------------//
          if (second == "") {
@@ -132,7 +132,7 @@ void format_line(string title, int line_num, string line,
                      "Delete Key and Value and stuff...");
          } else {
             //-------------------------------------------------------//
-            // CASE: KEY = VALUE                                    //
+            // CASE: KEY = VALUE                                     //
             // Insert the Key and Value into the map.                //
             // If the key already exists, change its value.          //
             //-------------------------------------------------------//

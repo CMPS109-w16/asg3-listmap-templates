@@ -42,6 +42,7 @@ listmap<Key,Value,Less>::insert (const value_type& pair) {
    //Check if the listmap is empty first
    if(empty()){
       anchor_.next = new node(anchor(), anchor(), pair);
+      anchor_.prev = anchor_.next;
       curr = begin();
    }
    else{
